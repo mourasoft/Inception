@@ -1,9 +1,14 @@
 version: "3.6"
 services:
-  # mariadb:
-  #   build: ./requirements/mariadb
-  #   image: mariadb
-  #   container_name: mariadb-container
+  mariadb:
+    build: ./requirements/mariadb
+    image: mariadb
+    container_name: mariadb
+    networks:
+      inception:
+          ipv4_address: 192.12.0.4
+    ports:
+      - "3306"
 
   wordpress:
     build: ./requirements/wordpress
@@ -11,8 +16,11 @@ services:
     container_name: wordpress
     volumes:
       - wordpress:/var/www
+    networks:
+      inception:
+          ipv4_address: 192.12.0.3
     ports:
-      - "9000:9000"
+      - "9000"
 
   nginx:
     build: ./requirements/nginx
@@ -23,9 +31,19 @@ services:
     volumes:
       - wordpress:/var/www
     ports:
-      - "80:80"
       - "443:443"
+    networks:
+      inception:
+          ipv4_address: 192.12.0.2
 
 volumes:
     wordpress:
     DB:
+
+networks:
+  inception:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.12.0.0/16
+  
