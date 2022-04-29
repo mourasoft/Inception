@@ -5,23 +5,27 @@ services:
   #   image: mariadb
   #   container_name: mariadb-container
 
-  # wordpress:
-  #   build: ./requirements/wordpress
-  #   image: wordpress
-  #   container_name: wordpress-container
-  #   volumes:
-  #     - ./wordpress:/var/www/html
+  wordpress:
+    build: ./requirements/wordpress
+    image: wordpress
+    container_name: wordpress
+    volumes:
+      - wordpress:/var/www
+    ports:
+      - "9000:9000"
 
   nginx:
     build: ./requirements/nginx
     image: nginx
-    container_name: nginx-container
+    container_name: nginx
+    # depends_on:
+    #   - wordpress
     volumes:
-      - wordpress:/var/www/html
+      - wordpress:/var/www
     ports:
       - "80:80"
       - "443:443"
 
 volumes:
     wordpress:
-    # DB:
+    DB:
