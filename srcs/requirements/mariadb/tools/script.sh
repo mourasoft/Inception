@@ -1,0 +1,15 @@
+#!/bin/bash
+service mysql restart
+if [ -d "/var/lib/mysql/$MYSQL_DATABASE" ] 
+then
+    echo "the database exists"
+else
+    echo "database does not exist"
+    mysql -u root -e "CREATE DATABASE $MYSQL_DATABASE;";
+    mysql -u root -e "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'" ;
+    mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%'; FLUSH PRIVILEGES";
+    mysql -u root -e "alter user 'root'@'localhost' identified by '$MYSQL_ROOT_PASSWORD';"
+fi
+
+
+exec tail -f /var/log/mysql/error.log

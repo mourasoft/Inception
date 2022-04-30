@@ -5,21 +5,16 @@ RUN apt-get update && apt-get install -y \
     php-zip php-net-socket php-gd php-xml-util \
     php-gettext php-mysql php-bcmath unzip wget git
 
-# RUN sed -i 's/post_max_size = 8M/post_max_size = 64M/g' /etc/php/7.3/fpm/php.ini
-# RUN sed -i 's/memory_limit = 128M/memory_limit = 256M/g' /etc/php/7.3/fpm/php.ini
-# RUN sed -i 's/max_execution_time = 30/max_execution_time = 300/g' /etc/php/7.3/fpm/php.ini
-# RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 32M/g' /etc/php/7.3/fpm/php.ini
-# RUN sed -i 's/;date.timezone =/date.timezone = \"Africa\/Casablanca\"/g' /etc/php/7.3/fpm/php.ini
 RUN mkdir /run/php/
 RUN sed -i 's/listen = \/run\/php\/php7.3-fpm.sock/listen = 9000/g' /etc/php/7.3/fpm/pool.d/www.conf
 WORKDIR /var/www/html
-RUN wget https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz > /dev/null 2>&1
-RUN tar -xzf /tmp/wordpress.tar.gz -C /var/www/html
-RUN cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
-RUN sed -i 's/database_name_here/inception/g' /var/www/html/wordpress/wp-config.php
-RUN sed -i 's/username_here/mouras/g' /var/www/html/wordpress/wp-config.php
-RUN sed -i 's/password_here/123456/g' /var/www/html/wordpress/wp-config.php
-RUN sed -i 's/localhost/mariadb/g' /var/www/html/wordpress/wp-config.php
-RUN chown -R www-data:www-data /var/www/html/wordpress
+RUN wget https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz > /dev/null 2>&1 
+RUN tar -xzf /tmp/wordpress.tar.gz -C /tmp/ && rm /tmp/wordpress.tar.gz
+# RUN cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
+# RUN sed -i 's/database_name_here/inception/g' /var/www/html/wordpress/wp-config.php
+# RUN sed -i 's/username_here/mouras/g' /var/www/html/wordpress/wp-config.php
+# RUN sed -i 's/password_here/mouras/g' /var/www/html/wordpress/wp-config.php
+# RUN sed -i 's/localhost/mariadb/g' /var/www/html/wordpress/wp-config.php
+# RUN chown -R www-data:www-data /var/www/html/wordpress
 CMD [ "php-fpm7.3", "--nodaemonize" ]
 # apt-get install nginx mariadb-server mariadb-client 

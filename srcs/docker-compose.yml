@@ -10,8 +10,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "inception"
-      MYSQL_USER: "inception"
-      MYSQL_PASSWORD: "inception"
+      MYSQL_USER: "mouras"
+      MYSQL_PASSWORD: "mouras"
     expose:
       - "3306"
 
@@ -44,6 +44,7 @@ services:
 
 volumes:
     wordpress:
+    
     DB:
 
 networks:
