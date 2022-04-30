@@ -2,29 +2,35 @@ version: "3.6"
 services:
   mariadb:
     build: ./requirements/mariadb
-    image: mariadb
+    image: mariadb:1
     container_name: mariadb
     networks:
       inception:
           ipv4_address: 192.12.0.4
-    ports:
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "inception"
+      MYSQL_USER: "inception"
+      MYSQL_PASSWORD: "inception"
+    expose:
       - "3306"
 
   wordpress:
     build: ./requirements/wordpress
-    image: wordpress
+    image: wordpress:1
     container_name: wordpress
     volumes:
       - wordpress:/var/www
     networks:
       inception:
           ipv4_address: 192.12.0.3
-    ports:
+    
+    expose:
       - "9000"
 
   nginx:
     build: ./requirements/nginx
-    image: nginx
+    image: nginx:1
     container_name: nginx
     # depends_on:
     #   - wordpress
@@ -47,3 +53,5 @@ networks:
       config:
         - subnet: 192.12.0.0/16
   
+
+# GRANT ALL PRIVILEGES ON inception.* TO 'user'@'192.12.0.3';

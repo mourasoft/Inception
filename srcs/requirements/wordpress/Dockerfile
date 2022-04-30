@@ -16,9 +16,9 @@ WORKDIR /var/www/html
 RUN wget https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz > /dev/null 2>&1
 RUN tar -xzf /tmp/wordpress.tar.gz -C /var/www/html
 RUN cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
-RUN sed -i 's/database_name_here/wpdb/g' /var/www/html/wordpress/wp-config.php
-RUN sed -i 's/username_here/wpuser/g' /var/www/html/wordpress/wp-config.php
-RUN sed -i 's/password_here/dbpassword/g' /var/www/html/wordpress/wp-config.php
+RUN sed -i 's/database_name_here/inception/g' /var/www/html/wordpress/wp-config.php
+RUN sed -i 's/username_here/mouras/g' /var/www/html/wordpress/wp-config.php
+RUN sed -i 's/password_here/123456/g' /var/www/html/wordpress/wp-config.php
 RUN sed -i 's/localhost/mariadb/g' /var/www/html/wordpress/wp-config.php
 RUN chown -R www-data:www-data /var/www/html/wordpress
 CMD [ "php-fpm7.3", "--nodaemonize" ]
