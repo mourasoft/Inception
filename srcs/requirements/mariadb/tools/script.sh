@@ -1,5 +1,5 @@
 #!/bin/bash
-service mysql restart
+service mysql restart > /dev/null 2>&1
 if [ -d "/var/lib/mysql/$MYSQL_DATABASE" ] 
 then
     echo "the database exists"
@@ -12,4 +12,4 @@ else
 fi
 
 
-exec tail -f /var/log/mysql/error.log
+exec "$@"

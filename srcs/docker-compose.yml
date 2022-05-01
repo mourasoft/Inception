@@ -7,6 +7,8 @@ services:
     networks:
       inception:
           ipv4_address: 192.12.0.4
+    volumes:
+      - DB:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "inception"
