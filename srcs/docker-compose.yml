@@ -1,15 +1,16 @@
 version: "3.6"
 services:
-  adminer:
-    build: ./requirements/bonus/adminer
-    image: adminer
-    container_name: adminer
+  
+  redis:
+    build: ./requirements/bonus/redis
+    image: redis:1
+    container_name: redis
     networks:
       inception:
-        ipv4_address: 192.12.0.5
-    ports:
-      - "9000:9000"
-      
+          ipv4_address: 192.12.0.7
+    expose:
+      - 6379
+
   mariadb:
     build: ./requirements/mariadb
     image: mariadb:1
@@ -17,13 +18,8 @@ services:
     networks:
       inception:
           ipv4_address: 192.12.0.4
-    volumes:
-      - DB:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "inception"
-      MYSQL_USER: "mouras"
-      MYSQL_PASSWORD: "mouras"
+    env_file: ".env"
+    restart: always
     expose:
       - "3306"
 
@@ -31,20 +27,13 @@ services:
     build: ./requirements/wordpress
     image: wordpress:1
     container_name: wordpress
-    environment:
-      MYSQL_DATABASE: "inception"
-      MYSQL_USER: "mouras"
-      MYSQL_PASSWORD: "mouras"
-      WP_USER: "ahshly"
-      WP_USER_PASSWORD: "ahshly@@"
-      WP_ADMIN_USER: "test"
-      WP_ADMIN_USER_PASSWORD: "test@@"
+    env_file: ".env"
     volumes:
       - wordpress:/var/www
     networks:
       inception:
           ipv4_address: 192.12.0.3
-    
+    restart: always
     expose:
       - "9000"
 
@@ -52,8 +41,6 @@ services:
     build: ./requirements/nginx
     image: nginx:1
     container_name: nginx
-    # depends_on:
-    #   - wordpress
     volumes:
       - wordpress:/var/www
     ports:
@@ -61,6 +48,36 @@ services:
     networks:
       inception:
           ipv4_address: 192.12.0.2
+    restart: always
+
+  ftp:
+    build: ./requirements/bonus/ftp
+    image: ftp:1
+    container_name: ftp
+    env_file: ".env"
+    volumes:
+      - wordpress:/home/${FTP_USER}
+    networks:
+      inception:
+        ipv4_address: 192.12.0.6
+    ports:
+      - "21:21"
+      - "20:20"
+    restart: always
+    depends_on: 
+      - wordpress
+  
+  adminer:
+    build: ./requirements/bonus/adminer
+    image: adminer:1
+    container_name: adminer
+    networks:
+      inception:
+        ipv4_address: 192.12.0.5
+    volumes:
+      - wordpress:/var/www
+    restart: always
+    
 
 volumes:
     wordpress:

@@ -6,5 +6,8 @@ RUN apt-get update && apt-get install -y \
     php-zip php-net-socket php-gd php-xml-util \
     php-gettext php-mysql php-bcmath unzip wget 
 
-RUN wget "http://www.adminer.org/latest.php" -O /var/www/html/adminer/index.php
-CMD ["php","-S","0.0.0.0:9000"]
+RUN  wget "http://www.adminer.org/latest.php" -O /tmp/index.php
+COPY tools .
+RUN chmod -R 777 /script.sh
+ENTRYPOINT [ "/script.sh" ]
+CMD ["php","-S","0.0.0.0:4000"]
