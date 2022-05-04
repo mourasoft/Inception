@@ -1,15 +1,15 @@
 version: "3.6"
 services:
   
-  redis:
-    build: ./requirements/bonus/redis
-    image: redis:1
-    container_name: redis
-    networks:
-      inception:
-          ipv4_address: 192.12.0.7
-    expose:
-      - 6379
+  # redis:
+  #   build: ./requirements/bonus/redis
+  #   image: redis:1
+  #   container_name: redis
+  #   networks:
+  #     inception:
+  #         ipv4_address: 192.12.0.7
+  #   expose:
+  #     - 6379
 
   mariadb:
     build: ./requirements/mariadb
@@ -19,6 +19,8 @@ services:
       inception:
           ipv4_address: 192.12.0.4
     env_file: ".env"
+    volumes:
+      - DB:/var/lib/mysql
     restart: always
     expose:
       - "3306"
@@ -50,22 +52,22 @@ services:
           ipv4_address: 192.12.0.2
     restart: always
 
-  ftp:
-    build: ./requirements/bonus/ftp
-    image: ftp:1
-    container_name: ftp
-    env_file: ".env"
-    volumes:
-      - wordpress:/home/${FTP_USER}
-    networks:
-      inception:
-        ipv4_address: 192.12.0.6
-    ports:
-      - "21:21"
-      - "20:20"
-    restart: always
-    depends_on: 
-      - wordpress
+  # ftp:
+  #   build: ./requirements/bonus/ftp
+  #   image: ftp:1
+  #   container_name: ftp
+  #   env_file: ".env"
+  #   volumes:
+  #     - wordpress:/home/${FTP_USER}
+  #   networks:
+  #     inception:
+  #       ipv4_address: 192.12.0.6
+  #   ports:
+  #     - "21:21"
+  #     - "20:20"
+  #   restart: always
+  #   depends_on: 
+  #     - wordpress
   
   adminer:
     build: ./requirements/bonus/adminer
