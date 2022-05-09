@@ -1,15 +1,15 @@
 version: "3.6"
 services:
   
-  # redis:
-  #   build: ./requirements/bonus/redis
-  #   image: redis:1
-  #   container_name: redis
-  #   networks:
-  #     inception:
-  #         ipv4_address: 192.12.0.7
-  #   expose:
-  #     - 6379
+  redis:
+    build: ./requirements/bonus/redis
+    image: redis:1
+    container_name: redis
+    networks:
+      inception:
+          ipv4_address: 192.12.0.7
+    expose:
+      - 6379
 
   mariadb:
     build: ./requirements/mariadb
@@ -45,6 +45,7 @@ services:
     container_name: nginx
     volumes:
       - wordpress:/var/www
+      - ./requirements/bonus/website:/var/www/html/website/
     ports:
       - "443:443"
     networks:
@@ -52,22 +53,22 @@ services:
           ipv4_address: 192.12.0.2
     restart: always
 
-  # ftp:
-  #   build: ./requirements/bonus/ftp
-  #   image: ftp:1
-  #   container_name: ftp
-  #   env_file: ".env"
-  #   volumes:
-  #     - wordpress:/home/${FTP_USER}
-  #   networks:
-  #     inception:
-  #       ipv4_address: 192.12.0.6
-  #   ports:
-  #     - "21:21"
-  #     - "20:20"
-  #   restart: always
-  #   depends_on: 
-  #     - wordpress
+  ftp:
+    build: ./requirements/bonus/ftp
+    image: ftp:1
+    container_name: ftp
+    env_file: ".env"
+    volumes:
+      - wordpress:/home/${FTP_USER}
+    networks:
+      inception:
+        ipv4_address: 192.12.0.6
+    ports:
+      - "21:21"
+      - "20:20"
+    restart: always
+    depends_on: 
+      - wordpress
   
   adminer:
     build: ./requirements/bonus/adminer
@@ -80,12 +81,40 @@ services:
       - wordpress:/var/www
     restart: always
     
+  cadvisor:
+    build: ./requirements/bonus/cadvisor
+    image: cadvisor:1
+    container_name: cadvisor
+    networks:
+      inception:
+        ipv4_address: 192.12.0.8
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+     
+ 
 
 volumes:
     wordpress:
       name: wordpress
+      driver: local
+      driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: '/home/mmeski/data/wordpress'
     DB:
       name: DB
+      driver: local
+      driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: '/home/mmeski/data/mariadb'
 
 networks:
   inception:
@@ -95,5 +124,3 @@ networks:
       config:
         - subnet: 192.12.0.0/16
   
-
-# GRANT ALL PRIVILEGES ON inception.* TO 'user'@'192.12.0.3';

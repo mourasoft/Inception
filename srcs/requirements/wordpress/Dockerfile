@@ -16,8 +16,8 @@ RUN mv /var/www/html/wordpress/wp-cli.phar /usr/local/bin/wp
 
 WORKDIR /
 COPY tools .
+COPY conf .
 RUN chmod -R 777 /script.sh
 ENTRYPOINT [ "/script.sh" ]
 
 CMD [ "php-fpm7.3", "--nodaemonize" ]
-# apt-get install nginx mariadb-server mariadb-client 

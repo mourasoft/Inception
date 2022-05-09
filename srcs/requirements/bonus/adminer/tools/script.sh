@@ -6,6 +6,7 @@ else
     echo "installing adminer"
     mkdir -p /var/www/html/wordpress/adminer/
     cp -r /tmp/index.php /var/www/html/wordpress/adminer/
+   
 fi  
 
 exec "$@"
